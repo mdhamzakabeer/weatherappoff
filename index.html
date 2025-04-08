@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    body::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.2), transparent 70%),
+              radial-gradient(circle at 70% 70%, rgba(56, 189, 248, 0.2), transparent 70%),
+              radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.1), transparent 70%);
+  z-index: -20;
+  backdrop-filter: none;
+  opacity: 0.6;
+}
+
+
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative"></body>
+
+  <div
+    class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 w-full max-w-2xl text-white transition-all">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-6 gap-3 w-full">
+      <h1 class="text-2xl font-bold tracking-wide flex items-center gap-2">
+        <i class="fas fa-cloud-sun text-yellow-300"></i>
+        WeatherNow
+      </h1>
+
+      <!-- Searchable Dropdown -->
+      <div class="relative w-full sm:w-52">
+        <div class="relative">
+          <input type="text" id="cityInput" placeholder="Select City"
+            class="w-full pl-10 pr-8 py-2 rounded-full bg-white/20 text-white placeholder-white text-left focus:outline-none cursor-pointer"
+            oninput="filterCities()" onclick="toggleDropdown()" required />
+
+          <i class="fas fa-globe absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
+          <i
+            class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-white text-xs pinter-events-none"></i>
+        </div>
+
+        <!-- Dropdown list -->
+        <ul id="cityList"
+          class="absolute z-10 mt-2 w-full bg-white text-black rounded-lg shadow-lg max-h-48 overflow-y-auto hidden">
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Karachi')">Karachi</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Lahore')">Lahore</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Islamabad')">Islamabad</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Faisalabad')">Faisalabad</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Peshawar')">Peshawar</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Afghanistan')">Afghanistan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Albania')">Albania</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Algeria')">Algeria</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Andorra')">Andorra</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Angola')">Angola</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Antigua and Barbuda')">Antigua
+            and Barbuda</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Argentina')">Argentina</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Armenia')">Armenia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Australia')">Australia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Austria')">Austria</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Azerbaijan')">Azerbaijan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bahamas')">Bahamas</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bahrain')">Bahrain</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bangladesh')">Bangladesh</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Barbados')">Barbados</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Belarus')">Belarus</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Belgium')">Belgium</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Belize')">Belize</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Benin')">Benin</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bhutan')">Bhutan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bolivia')">Bolivia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bosnia and Herzegovina')">Bosnia
+            and Herzegovina</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Botswana')">Botswana</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Brazil')">Brazil</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Brunei')">Brunei</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Bulgaria')">Bulgaria</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Burkina Faso')">Burkina Faso
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Burundi')">Burundi</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Cabo Verde')">Cabo Verde</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Cambodia')">Cambodia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Cameroon')">Cameroon</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Canada')">Canada</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Central African Republic')">
+            Central African Republic</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Chad')">Chad</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Chile')">Chile</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('China')">China</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Colombia')">Colombia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Comoros')">Comoros</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Congo (Congo-Brazzaville)')">
+            Congo (Congo-Brazzaville)</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Costa Rica')">Costa Rica</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Croatia')">Croatia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Cuba')">Cuba</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Cyprus')">Cyprus</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Czech Republic')">Czech Republic
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Denmark')">Denmark</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Djibouti')">Djibouti</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Dominica')">Dominica</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Dominican Republic')">Dominican
+            Republic</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Ecuador')">Ecuador</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Egypt')">Egypt</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('El Salvador')">El Salvador</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Equatorial Guinea')">Equatorial
+            Guinea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Eritrea')">Eritrea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Estonia')">Estonia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Eswatini')">Eswatini</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Ethiopia')">Ethiopia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Fiji')">Fiji</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Finland')">Finland</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('France')">France</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Gabon')">Gabon</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Gambia')">Gambia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Georgia')">Georgia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Germany')">Germany</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Ghana')">Ghana</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Greece')">Greece</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Grenada')">Grenada</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Guatemala')">Guatemala</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Guinea')">Guinea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Guinea-Bissau')">Guinea-Bissau
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Guyana')">Guyana</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Haiti')">Haiti</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Honduras')">Honduras</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Hungary')">Hungary</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Iceland')">Iceland</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('India')">India</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Indonesia')">Indonesia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Iran')">Iran</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Iraq')">Iraq</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Ireland')">Ireland</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Israel')">Israel</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Italy')">Italy</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Jamaica')">Jamaica</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Japan')">Japan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Jordan')">Jordan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Kazakhstan')">Kazakhstan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Kenya')">Kenya</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Kiribati')">Kiribati</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Kuwait')">Kuwait</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Kyrgyzstan')">Kyrgyzstan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Laos')">Laos</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Latvia')">Latvia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Lebanon')">Lebanon</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Lesotho')">Lesotho</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Liberia')">Liberia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Libya')">Libya</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Liechtenstein')">Liechtenstein
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Lithuania')">Lithuania</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Luxembourg')">Luxembourg</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Madagascar')">Madagascar</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Malawi')">Malawi</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Malaysia')">Malaysia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Maldives')">Maldives</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mali')">Mali</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Malta')">Malta</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Marshall Islands')">Marshall
+            Islands</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mauritania')">Mauritania</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mauritius')">Mauritius</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mexico')">Mexico</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Micronesia')">Micronesia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Moldova')">Moldova</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Monaco')">Monaco</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mongolia')">Mongolia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Montenegro')">Montenegro</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Morocco')">Morocco</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Mozambique')">Mozambique</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Myanmar (formerly Burma)')">
+            Myanmar (formerly Burma)</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Namibia')">Namibia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Nauru')">Nauru</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Nepal')">Nepal</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Netherlands')">Netherlands</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('New Zealand')">New Zealand</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Nicaragua')">Nicaragua</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Niger')">Niger</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Nigeria')">Nigeria</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('North Korea')">North Korea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('North Macedonia')">North
+            Macedonia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Norway')">Norway</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Oman')">Oman</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Pakistan')">Pakistan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Palau')">Palau</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Palestine State')">Palestine
+            State</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Panama')">Panama</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Papua New Guinea')">Papua New
+            Guinea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Paraguay')">Paraguay</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Peru')">Peru</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Philippines')">Philippines</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Poland')">Poland</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Portugal')">Portugal</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Qatar')">Qatar</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Romania')">Romania</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Russia')">Russia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Rwanda')">Rwanda</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Saint Kitts and Nevis')">Saint
+            Kitts and Nevis</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Saint Lucia')">Saint Lucia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Saint Vincent and the Grenadines')">
+            Saint Vincent and the Grenadines</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Samoa')">Samoa</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('San Marino')">San Marino</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Sao Tome and Principe')">Sao
+            Tome and Principe</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Saudi Arabia')">Saudi Arabia
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Senegal')">Senegal</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Serbia')">Serbia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Seychelles')">Seychelles</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Sierra Leone')">Sierra Leone
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Singapore')">Singapore</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Slovakia')">Slovakia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Slovenia')">Slovenia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Solomon Islands')">Solomon
+            Islands</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Somalia')">Somalia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('South Africa')">South Africa
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('South Korea')">South Korea</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('South Sudan')">South Sudan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Spain')">Spain</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Sri Lanka')">Sri Lanka</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Sudan')">Sudan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Suriname')">Suriname</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Sweden')">Sweden</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Switzerland')">Switzerland</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Syria')">Syria</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Tajikistan')">Tajikistan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Tanzania')">Tanzania</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Thailand')">Thailand</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Timor-Leste')">Timor-Leste</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Togo')">Togo</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Tonga')">Tonga</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Trinidad and Tobago')">Trinidad
+            and Tobago</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Tunisia')">Tunisia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Turkey')">Turkey</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Turkmenistan')">Turkmenistan
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Tuvalu')">Tuvalu</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Uganda')">Uganda</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Ukraine')">Ukraine</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('United Arab Emirates')">United
+            Arab Emirates</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('United Kingdom')">United Kingdom
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('United States of America')">
+            United States of America</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Uruguay')">Uruguay</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Uzbekistan')">Uzbekistan</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Vanuatu')">Vanuatu</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Vatican City')">Vatican City
+          </li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Venezuela')">Venezuela</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Vietnam')">Vietnam</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Yemen')">Yemen</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Zambia')">Zambia</li>
+          <li class="px-4 py-2 hover:bg-purple-100 cursor-pointer" onclick="selectCity('Zimbabwe')">Zimbabwe</li>
+        </ul>
+        </div>
+        </div>
+
+    <!-- Global Search Box -->
+    <div class="mb-6">
+      <input type="text" id="globalSearch" placeholder="Search forecast e.g. Sunny, Mon..."
+        class="w-full px-4 py-2 rounded-xl bg-white/20 placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition"
+        oninput="filterForecast()" />
+    </div>
+
+    <!-- Main Weather -->
+    <div class="flex flex-col items-center text-center space-y-3 mb-4">
+      <i class="fas fa-sun text-6xl text-yellow-400 drop-shadow-md"></i>
+      <h2 class="text-4xl font-semibold">32°C</h2>
+      <p class="text-base font-medium">Sunny & Clear</p>
+      <p class="text-sm opacity-80" id="selectedCity">Karachi, Pakistan</p>
+    </div>
+
+      <!-- Time and Date -->
+      <p class="text-xs opacity-70" id="localDateTime">Loading time...</p>
+
+
+    <div class="border-t border-white/20 my-4"></div>
+
+    <!-- Weather Stats -->
+    <div class="grid grid-cols-2 gap-3 text-sm mb-6">
+      <div class="bg-white/10 p-3 rounded-xl text-center">
+        <p class="mb-1">
+          <i class="fas fa-droplet text-blue-400 mr-1"></i>Humidity
+        </p>
+        <p class="font-bold text-lg">45%</p>
+      </div>
+      <div class="bg-white/10 p-3 rounded-xl text-center">
+        <p class="mb-1">
+          <i class="fas fa-wind text-cyan-300 mr-1"></i>Wind
+        </p>
+        <p class="font-bold text-lg">15 km/h</p>
+      </div>
+      <div class="bg-white/10 p-3 rounded-xl text-center">
+        <p class="mb-1">
+          <i class="fas fa-temperature-three-quarters text-red-400 mr-1"></i>Feels Like
+        </p>
+        <p class="font-bold text-lg">34°C</p>
+      </div>
+      <div class="bg-white/10 p-3 rounded-xl text-center">
+        <p class="mb-1">
+          <i class="fas fa-gauge text-yellow-300 mr-1"></i>Pressure
+        </p>
+        <p class="font-bold text-lg">1013 hPa</p>
+      </div>
+    </div>
+
+    Forecast
+    <h3 class="text-lg font-semibold mb-3">7-Day Forecast</h3>
+    <div class="flex items-center justify-between gap-2">
+      <button onclick="scrollForecast(-1)" class="text-white text-xl hover:text-gray-300">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div id="forecast-scroll" class="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth w-full">
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Sun</p>
+          <p class="text-lg font-bold">26°C</p>
+          <p class="text-xs">Sunny</p>
+        </div>
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Mon</p>
+          <p class="text-lg font-bold">28°C</p>
+          <p class="text-xs">Cloudy</p>
+        </div>
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Tue</p>
+          <p class="text-lg font-bold">30°C</p>
+          <p class="text-xs">Rainy</p>
+        </div>
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Wed</p>
+          <p class="text-lg font-bold">27°C</p>
+          <p class="text-xs">Sunny</p>
+        </div>
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Thu</p>
+          <p class="text-lg font-bold">25°C</p>
+          <p class="text-xs">Windy</p>
+        </div>
+        <div class="min-w-[80px] bg-white/10 p-3 rounded-xl text-center">
+          <p class="text-sm font-medium">Fri</p>
+          <p class="text-lg font-bold">29°C</p>
+          <p class="text-xs">Partly Cloudy</p>
+        </div>
+        <div class="w-[100px] flex-shrink-0 bg-white/10 p-3 rounded-xl text-center">
+
+          <p class="text-sm font-medium">Sat</p>
+          <p class="text-lg font-bold">27°C</p>
+          <p class="text-xs">Thunderstorms</p>
+        </div>
+      </div>
+      <button onclick="scrollForecast(1)" class="text-white text-xl hover:text-gray-300">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-xs text-center mt-6 opacity-60">Powered by <span
+        class="font-semibold text-white/90">MuhammadHamzakabeers</span></p>
+        
+  </div>
+
+
+
+<!-- Background Weather Video -->
+<video
+  id="backgroundVideo"
+  autoplay
+  muted
+  loop
+  playsinline
+  class="fixed top-0 left-0 w-full h-full object-cover z-[-10]"
+>
+  <source src="videos/default.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+  <!-- Optional Overlay -->
+  <div class="fixed top-0 left-0 w-full h-full bg-black/20 z-[-5]"></div>
+
+ 
+
+
+  <!-- Scripts -->
+  <script>
+    function scrollForecast(direction) {
+      const container = document.getElementById("forecast-scroll");
+      const scrollAmount = 120;
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    const cityInput = document.getElementById("cityInput");
+    const cityList = document.getElementById("cityList");
+    const selectedCityDisplay = document.getElementById("selectedCity");
+
+    function toggleDropdown() {
+      cityList.classList.toggle("hidden");
+    }
+
+    function selectCity(city) {
+      cityInput.value = city;
+      selectedCityDisplay.textContent = `${city}, Pakistan`;
+      cityList.classList.add("hidden");
+    }
+
+    function filterCities() {
+  const filter = cityInput.value.toLowerCase();
+  const cities = cityList.getElementsByTagName("li");
+
+  for (let i = 0; i < cities.length; i++) {
+    const city = cities[i].textContent.toLowerCase();
+    // Show only those cities which start with the typed alphabet
+    cities[i].style.display = city.startsWith(filter) ? "" : "none";
+  }
+
+  cityList.classList.remove("hidden"); // Show dropdown on input
+}
+
+document.addEventListener("click", function(e) {
+  const dropdownContainer = document.querySelector("#cityInput").parentElement.parentElement;
+  if (!dropdownContainer.contains(e.target)) {
+    document.getElementById("cityList").classList.add("hidden");
+  }
+});
+
+
+    function filterForecast() {
+      const search = document.getElementById("globalSearch").value.toLowerCase();
+      const cards = document.querySelectorAll("#forecast-scroll > div");
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(search) ? "block" : "none";
+      });
+    }
+  </script>
+  <script src="aap.js"></script>
+</body>
+
+</html>
