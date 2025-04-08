@@ -71,6 +71,10 @@ function showLocalTime(data) {
 // Set Background Video
 // =======================
 function setBackgroundVideoByWeather(condition) {
+
+  //  Remove the default image before playing video
+  document.body.style.backgroundImage = "none";
+  
   const videos = {
     Clear: [
       "https://videos.pexels.com/video-files/31488691/13426132_1440_2560_30fps.mp4",
@@ -102,16 +106,19 @@ function setBackgroundVideoByWeather(condition) {
     ]
   };
 
-  const videoList = videos[condition] || ["https://videos.pexels.com/video-files/855507/855507-sd_640_360_25fps.mp4"];
+  // ✅ Default video if condition is not matched or not available
+  const defaultVideo = "https://videos.pexels.com/video-files/855441/855441-hd_1920_1080_25fps.mp4";
 
+  const videoList = videos[condition] || [defaultVideo];
   const randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
 
   const videoElement = document.getElementById("backgroundVideo");
-  videoElement.src = randomVideo;
-  videoElement.load();
-  videoElement.play();
+  if (videoElement) {
+    videoElement.src = randomVideo;
+    videoElement.load();
+    videoElement.play().catch(err => console.error("Video play error:", err));
+  }
 }
-
   
   
   
@@ -220,6 +227,12 @@ document.getElementById("globalSearch").addEventListener("change", function () {
 // Auto Fetch on Load
 // =======================
 window.onload = function () {
+  // ✅ Default background image before weather loads
+  document.body.style.backgroundImage = "url('https://plus.unsplash.com/premium_photo-1673292293042-cafd9c8a3ab3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bmF0dXJlfGVufDB8fDB8fHww')";
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(async function (position) {
       const lat = position.coords.latitude;
