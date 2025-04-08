@@ -21,7 +21,7 @@ async function fetchWeather(location) {
       updateMainWeather(weatherData);
       updateForecast(forecastData);
       showLocalTime(weatherData);
-      setBackgroundVideo(weatherData.name);
+      
   
     } catch (error) {
       console.error("Error fetching weather data:", error);
@@ -102,7 +102,8 @@ function setBackgroundVideoByWeather(condition) {
     ]
   };
 
-  const videoList = videos[condition] || ["https://yourcdn.com/videos/default.mp4"];
+  const videoList = videos[condition] || ["https://videos.pexels.com/video-files/855507/855507-sd_640_360_25fps.mp4"];
+
   const randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
 
   const videoElement = document.getElementById("backgroundVideo");
